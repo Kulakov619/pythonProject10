@@ -82,7 +82,7 @@ search_fields = (поля модели для поиска)
         list_display = ('user_to', 'user_from')
         search_fields = ('user_to',)
 
-Пример СТЭКА
+Пример СТЭКА:
 
     class PhotoInline(admin.StackedInline):
         model = models.Photo
