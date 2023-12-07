@@ -10,11 +10,30 @@ class User(AbstractUser):
     gender = models.BooleanField(_("мужчина?"), blank=True, null=True)
     birthday = models.DateField(_("дата рождения"), blank=True, null=True)
 
-
     class Meta:
         verbose_name = _('пользователь')
         verbose_name_plural = _('пользователи')
         ordering = ['last_name']
+
+
+class Message(models.Model):
+    user_from = models.ForeignKey(
+        'user',
+        on_delete=models.CASCADE,
+        db_column='user_from_id',
+        related_name=_('от'))
+    user_to = models.ForeignKey(
+        'user',
+        on_delete=models.CASCADE,
+        db_column='user_to_id',
+        related_name=_('кому'))
+    text = models.TextField(_('сообщение'))
+    created = models.DateField(_("дата отправки"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _('сообщение')
+        verbose_name_plural = _('сообщения')
+        ordering = ['-created']
 
 
 class Album(models.Model):
@@ -32,7 +51,6 @@ class Photo(models.Model):
     album = models.ForeignKey('album', on_delete=models.CASCADE, db_column='album_id')
     created = models.DateField(_("дата создания"), auto_now_add=True)
     photo = models.ImageField(_("фотография"), upload_to="uploads/photo/")
-
 
 
     class Meta:
