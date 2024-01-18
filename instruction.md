@@ -95,3 +95,33 @@ search_fields = (поля модели для поиска)
         inlines = [PhotoInline, ]
         list_display = ('name', 'user')
         search_fields = ('name', 'user')
+
+
+Связь многие ко многим. (Пример хобби из списка хобби)
+
+Для этого необходимо сделать 2 таблица (класса):
+
+Класс хобби:
+
+    class Hobby(models.Model):
+    name = models.CharField(_("название"), max_length=500)
+
+    class Meta:
+        verbose_name = _('хобби')
+        verbose_name_plural = _('хобби')
+        ordering = ['name']
+
+Таблица связи Юзер-Хобби:
+
+    class UserHobby(models.Model):
+    user = models.ForeignKey('user', on_delete=models.CASCADE, db_column='user_id')
+    hobby = models.ForeignKey('hobby', on_delete=models.CASCADE, db_column='hobby_id')
+
+    class Meta:
+        index_together = ['user_id', 'hobby_id']
+        verbose_name = _('хобби пользователя')
+        verbose_name_plural = _('хобби пользователя')
+
+Добавить к юзеру новое поле:
+
+    hobby = models.ManyToManyField(Hobby, through='UserHobby', verbose_name=_('хобби'), blank=True)
